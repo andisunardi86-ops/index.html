@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ALIEN TERMINAL — Captain Fx9</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --green:   #00ff88;
+  --green2:  #00cc66;
+  --green3:  #004422;
+  --gold:    #ccaa00;
+  --red:     #ff4422;
+  --bg:      #020805;
+  --bg2:     #060e07;
+  --bg3:     #0a140b;
+  --border:  #0d2a10;
+  --text:    #c8e6c9;
+  --muted:   #3a5a3a;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  cursor: crosshair;
+}
+
+/* ── SCANLINES OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,255,136,0.015) 2px,
+    rgba(0,255,136,0.015) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ── GRID BG ── */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,255,136,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,136,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 40px;
+  background: rgba(2,8,5,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: 'Orbitron', monospace;
+  font-size: 14px; font-weight: 900;
+  color: var(--green);
+  letter-spacing: 0.15em;
+  display: flex; align-items: center; gap: 10px;
+}
+.nav-logo span { color: var(--gold); }
+.nav-links { display: flex; gap: 32px; }
+.nav-links a {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px; color: var(--muted);
+  text-decoration: none; letter-spacing: 0.1em;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--green); }
+.nav-cta {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px; padding: 8px 20px;
+  background: transparent;
+  border: 1px solid var(--green);
+  color: var(--green);
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  transition: all 0.2s;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+}
+.nav-cta:hover { background: var(--green); color: #000; }
+
+/* ── HERO ── */
+.hero {
+  position: relative; z-index: 1;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: 120px 24px 80px;
+  overflow: hidden;
+}
+
+.hero-glow {
+  position: absolute;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(0,255,136,0.08) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.6; transform: translate(-50%,-50%) scale(1); }
+  50%       { opacity: 1;   transform: translate(-50%,-50%) scale(1.1); }
+}
+
+.hero-badge {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px; letter-spacing: 0.2em;
+  color: var(--gold);
+  border: 1px solid rgba(204,170,0,0.3);
+  padding: 6px 16px;
+  margin-bottom: 28px;
+  display: inline-block;
+  animation: fadeUp 0.8s ease both;
+}
+
+.hero-title {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(42px, 8vw, 96px);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+  animation: fadeUp 0.8s 0.1s ease both;
+}
+.hero-title .line1 { color: var(--green); display: block; }
+.hero-title .line2 {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(0,255,136,0.3);
+  display: block;
+}
+
+.hero-sub {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(12px, 2vw, 18px);
+  font-weight: 400;
+  color: var(--gold);
+  letter-spacing: 0.3em;
+  margin-bottom: 40px;
+  animation: fadeUp 0.8s 0.2s ease both;
+}
+
+.hero-desc {
+  font-size: 15px; line-height: 1.8;
+  color: var(--muted); max-width: 540px;
+  margin-bottom: 48px;
+  animation: fadeUp 0.8s 0.3s ease both;
+}
+
+.hero-btns {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  justify-content: center;
+  animation: fadeUp 0.8s 0.4s ease both;
+}
+
+.btn-primary {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px; letter-spacing: 0.12em;
+  padding: 16px 40px;
+  background: var(--green);
+  color: #000; font-weight: 700;
+  border: none; cursor: pointer;
+  text-decoration: none;
+  clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+  transition: all 0.2s;
+  position: relative; overflow: hidden;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: rgba(255,255,255,0.2);
+  transform: translateX(-100%);
+  transition: transform 0.3s;
+}
+.btn-primary:hover::after { transform: translateX(100%); }
+.btn-primary:hover { background: #00ffaa; transform: translateY(-2px); }
+
+.btn-secondary {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px; letter-spacing: 0.12em;
+  padding: 16px 40px;
+  background: transparent;
+  color: var(--green); border: 1px solid var(--border);
+  cursor: pointer; text-decoration: none;
+  clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+  transition: all 0.2s;
+}
+.btn-secondary:hover { border-color: var(--green); background: rgba(0,255,136,0.05); }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── STATS ROW ── */
+.stats {
+  position: relative; z-index: 1;
+  display: flex; justify-content: center;
+  gap: 0; flex-wrap: wrap;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+}
+.stat-item {
+  flex: 1; min-width: 160px;
+  padding: 32px 24px; text-align: center;
+  border-right: 1px solid var(--border);
+  position: relative;
+}
+.stat-item:last-child { border-right: none; }
+.stat-num {
+  font-family: 'Orbitron', monospace;
+  font-size: 36px; font-weight: 900;
+  color: var(--green);
+  display: block; margin-bottom: 4px;
+}
+.stat-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px; letter-spacing: 0.15em;
+  color: var(--muted);
+}
+
+/* ── SECTION COMMON ── */
+section { position: relative; z-index: 1; }
+.section-inner { max-width: 1100px; margin: 0 auto; padding: 100px 24px; }
+.section-tag {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px; letter-spacing: 0.3em;
+  color: var(--green2); margin-bottom: 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.section-tag::before {
+  content: '//'; color: var(--muted);
+}
+.section-title {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 900; line-height: 1.1;
+  color: #e8f5e9; margin-bottom: 16px;
+}
+.section-title em { color: var(--green); font-style: normal; }
+.section-desc {
+  font-size: 15px; line-height: 1.9;
+  color: var(--muted); max-width: 560px;
+}
+
+/* ── FEATURES GRID ── */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-top: 60px;
+}
+.feature-card {
+  background: var(--bg2);
+  padding: 36px 32px;
+  position: relative; overflow: hidden;
+  transition: background 0.3s;
+}
+.feature-card:hover { background: var(--bg3); }
+.feature-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0;
+  width: 3px; height: 0;
+  background: var(--green);
+  transition: height 0.4s ease;
+}
+.feature-card:hover::before { height: 100%; }
+.feature-icon {
+  font-size: 28px; margin-bottom: 16px; display: block;
+}
+.feature-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 13px; font-weight: 700;
+  color: var(--green); letter-spacing: 0.1em;
+  margin-bottom: 10px;
+}
+.feature-desc {
+  font-size: 13px; line-height: 1.8;
+  color: var(--muted);
+}
+.feature-badge {
+  display: inline-block; margin-top: 12px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px; padding: 3px 8px;
+  border: 1px solid var(--green3);
+  color: var(--green2); letter-spacing: 0.1em;
+}
+
+/* ── PRICING ── */
+.pricing-section { background: var(--bg2); }
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px; margin-top: 60px;
+}
+.price-card {
+  border: 1px solid var(--border);
+  padding: 40px 32px;
+  position: relative; overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s;
+  background: var(--bg);
+}
+.price-card:hover { border-color: var(--green); transform: translateY(-4px); }
+.price-card.featured {
+  border-color: var(--green);
+  background: linear-gradient(135deg, var(--bg3), var(--bg));
+}
+.price-card.featured::before {
+  content: 'POPULAR';
+  position: absolute; top: 16px; right: -24px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px; letter-spacing: 0.2em;
+  padding: 4px 36px;
+  background: var(--green); color: #000;
+  transform: rotate(45deg);
+}
+.price-name {
+  font-family: 'Orbitron', monospace;
+  font-size: 12px; font-weight: 700;
+  color: var(--muted); letter-spacing: 0.2em;
+  margin-bottom: 20px;
+}
+.price-amount {
+  font-family: 'Orbitron', monospace;
+  font-size: 48px; font-weight: 900;
+  color: var(--green); line-height: 1;
+  margin-bottom: 4px;
+}
+.price-amount span { font-size: 20px; color: var(--muted); }
+.price-period {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px; color: var(--muted);
+  margin-bottom: 32px;
+}
+.price-features { list-style: none; margin-bottom: 36px; }
+.price-features li {
+  font-size: 13px; color: var(--text);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+.price-features li::before {
+  content: '›'; color: var(--green);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 16px;
+}
+.price-features li.no { color: var(--muted); }
+.price-features li.no::before { content: '×'; color: var(--red); }
+
+/* ── HOW IT WORKS ── */
+.steps { display: flex; flex-direction: column; gap: 0; margin-top: 60px; }
+.step {
+  display: grid; grid-template-columns: 60px 1fr;
+  gap: 24px; padding: 32px 0;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.step:last-child { border-bottom: none; }
+.step-num {
+  font-family: 'Orbitron', monospace;
+  font-size: 36px; font-weight: 900;
+  color: var(--green3); line-height: 1;
+  padding-top: 4px;
+}
+.step:hover .step-num { color: var(--green); transition: color 0.3s; }
+.step-content {}
+.step-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 16px; font-weight: 700;
+  color: #e8f5e9; margin-bottom: 8px;
+}
+.step-desc { font-size: 14px; line-height: 1.8; color: var(--muted); }
+.step-code {
+  margin-top: 12px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px; color: var(--green2);
+  background: var(--bg3); border: 1px solid var(--border);
+  padding: 10px 16px; display: inline-block;
+  letter-spacing: 0.05em;
+}
+
+/* ── TELEGRAM CTA ── */
+.tg-section {
+  background: linear-gradient(135deg, var(--bg2), var(--bg3));
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.tg-inner {
+  max-width: 700px; margin: 0 auto;
+  padding: 100px 24px; text-align: center;
+}
+.tg-icon { font-size: 48px; margin-bottom: 24px; display: block;
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+/* ── ORDER FORM ── */
+.order-section { background: var(--bg); }
+.order-form {
+  max-width: 600px; margin: 60px auto 0;
+  border: 1px solid var(--border);
+  padding: 48px 40px;
+  background: var(--bg2);
+  position: relative;
+}
+.order-form::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--green), transparent);
+}
+.form-row { margin-bottom: 20px; }
+.form-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px; letter-spacing: 0.2em;
+  color: var(--muted); display: block; margin-bottom: 8px;
+}
+.form-input, .form-select {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 14px 16px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px; color: var(--text);
+  outline: none; transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+.form-input:focus, .form-select:focus { border-color: var(--green); }
+.form-input::placeholder { color: var(--muted); }
+.form-select option { background: var(--bg2); }
+.form-submit {
+  width: 100%; padding: 16px;
+  background: var(--green); color: #000;
+  font-family: 'Orbitron', monospace;
+  font-size: 13px; font-weight: 700;
+  letter-spacing: 0.15em; border: none;
+  cursor: pointer; transition: all 0.2s;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  margin-top: 8px;
+}
+.form-submit:hover { background: #00ffaa; transform: translateY(-2px); }
+.form-note {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px; color: var(--muted);
+  text-align: center; margin-top: 16px;
+  line-height: 1.8;
+}
+
+/* ── FOOTER ── */
+footer {
+  position: relative; z-index: 1;
+  border-top: 1px solid var(--border);
+  padding: 40px 40px;
+  display: flex; align-items: center;
+  justify-content: space-between; flex-wrap: wrap; gap: 16px;
+  background: var(--bg2);
+}
+.footer-logo {
+  font-family: 'Orbitron', monospace;
+  font-size: 12px; font-weight: 900;
+  color: var(--green); letter-spacing: 0.15em;
+}
+.footer-copy {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px; color: var(--muted);
+}
+.footer-links { display: flex; gap: 24px; }
+.footer-links a {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px; color: var(--muted);
+  text-decoration: none; transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--green); }
+
+/* ── TICKER ── */
+.ticker {
+  background: var(--green3);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden; padding: 10px 0;
+  position: relative; z-index: 1;
+}
+.ticker-inner {
+  display: flex; gap: 60px;
+  animation: ticker 20s linear infinite;
+  white-space: nowrap;
+}
+.ticker-item {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px; color: var(--green2);
+  letter-spacing: 0.1em; flex-shrink: 0;
+}
+.ticker-item span { color: var(--gold); }
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ── MOBILE ── */
+@media (max-width: 768px) {
+  nav { padding: 14px 20px; }
+  .nav-links { display: none; }
+  .stats { flex-direction: column; }
+  .stat-item { border-right: none; border-bottom: 1px solid var(--border); }
+  .section-inner { padding: 60px 20px; }
+  .order-form { padding: 32px 24px; }
+  footer { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">🛸 ALIEN <span>TERMINAL</span></div>
+  <div class="nav-links">
+    <a href="#features" data-id="nav-feat">FEATURES</a>
+    <a href="#harga" data-id="nav-price">PRICING</a>
+    <a href="#cara-pakai" data-id="nav-how">HOW IT WORKS</a>
+    <a href="#order" data-id="nav-order">ORDER</a>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <!-- Language switcher -->
+    <div style="display:flex;gap:4px;">
+      <button id="lang-en" onclick="setLang('en')"
+        style="font-family:'Share Tech Mono',monospace;font-size:11px;padding:5px 10px;
+               background:transparent;border:1px solid var(--green);color:var(--green);
+               cursor:pointer;letter-spacing:0.08em;transition:all 0.2s;">EN</button>
+      <button id="lang-id" onclick="setLang('id')"
+        style="font-family:'Share Tech Mono',monospace;font-size:11px;padding:5px 10px;
+               background:transparent;border:1px solid transparent;color:var(--muted);
+               cursor:pointer;letter-spacing:0.08em;transition:all 0.2s;">ID</button>
+    </div>
+    <a href="#order" class="nav-cta" data-id="nav-cta">BUY NOW</a>
+  </div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker" style="margin-top:60px;">
+  <div class="ticker-inner">
+    <span class="ticker-item">XAUUSD <span>+2.4%</span></span>
+    <span class="ticker-item">EURUSD <span>+0.8%</span></span>
+    <span class="ticker-item">BTCUSD <span>+5.1%</span></span>
+    <span class="ticker-item">GBPUSD <span>+1.2%</span></span>
+    <span class="ticker-item">USDJPY <span>-0.6%</span></span>
+    <span class="ticker-item">Score: <span>90%★★★</span></span>
+    <span class="ticker-item">ALIEN TERMINAL V14</span>
+    <span class="ticker-item">7 Komponen Signal</span>
+    <span class="ticker-item">Chart Pattern Detection</span>
+    <span class="ticker-item">Elliott Wave Analysis</span>
+    <!-- Duplicate untuk loop mulus -->
+    <span class="ticker-item">XAUUSD <span>+2.4%</span></span>
+    <span class="ticker-item">EURUSD <span>+0.8%</span></span>
+    <span class="ticker-item">BTCUSD <span>+5.1%</span></span>
+    <span class="ticker-item">GBPUSD <span>+1.2%</span></span>
+    <span class="ticker-item">USDJPY <span>-0.6%</span></span>
+    <span class="ticker-item">Score: <span>90%★★★</span></span>
+    <span class="ticker-item">ALIEN TERMINAL V14</span>
+    <span class="ticker-item">7 Komponen Signal</span>
+    <span class="ticker-item">Chart Pattern Detection</span>
+    <span class="ticker-item">Elliott Wave Analysis</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-badge" data-id="hero-badge">🛸 CAPTAIN FX9 PRESENTS</div>
+  <h1 class="hero-title">
+    <span class="line1">ALIEN</span>
+    <span class="line2">TERMINAL</span>
+  </h1>
+  <p class="hero-sub">V14 PRO — MT5 EXPERT ADVISOR</p>
+  <p class="hero-desc" data-id="hero-desc">Automated multi-pair scanner with 100-point scoring, Chart Pattern detection, Elliott Wave analysis, and London–New York session filter. One click FOLLOW — instant execution.</p>
+  <div class="hero-btns">
+    <a href="#order" class="btn-primary" data-id="hero-btn1">🚀 BUY NOW</a>
+    <a href="#features" class="btn-secondary" data-id="hero-btn2">SEE FEATURES</a>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat-item">
+    <span class="stat-num">100</span>
+    <span class="stat-label">POIN SCORING</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">7</span>
+    <span class="stat-label">KOMPONEN SINYAL</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">50+</span>
+    <span class="stat-label">PAIR SEKALIGUS</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">MT5</span>
+    <span class="stat-label">PLATFORM</span>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-inner">
+    <div class="section-tag">FITUR UNGGULAN</div>
+    <h2 class="section-title">Teknologi <em>Alien</em><br/>untuk Trader Serius</h2>
+    <p class="section-desc">Setiap sinyal difilter oleh 7 komponen independen sebelum ditampilkan. Tidak ada sinyal asal-asalan.</p>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <span class="feature-icon">📊</span>
+        <div class="feature-title">SCORING SYSTEM 100 POIN</div>
+        <div class="feature-desc">Sinyal dinilai dari 7 komponen: Trend MA H4/H1, RSI, Bollinger Band, Breakout Candle, Konfirmasi H4, dan London–NY Session Bonus.</div>
+        <span class="feature-badge">★★★ ELITE ≥ 90PTS</span>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🕯️</span>
+        <div class="feature-title">CHART PATTERN DETECTION</div>
+        <div class="feature-desc">Otomatis deteksi Engulfing, Pin Bar, Double Bottom/Top, dan Inside Bar. Ditampilkan langsung di kartu sinyal dengan label berwarna.</div>
+        <span class="feature-badge">REAL-TIME</span>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🌊</span>
+        <div class="feature-title">ELLIOTT WAVE ANALYSIS</div>
+        <div class="feature-desc">Deteksi struktur Impulse Wave, Wave 3, dan Correction End menggunakan swing high/low di H4. Bonus poin otomatis jika wave searah sinyal.</div>
+        <span class="feature-badge">H4 TIMEFRAME</span>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🕐</span>
+        <div class="feature-title">SESSION FILTER</div>
+        <div class="feature-desc">Scanner otomatis aktif hanya di sesi London dan New York. Pause saat news besar (NFP, FOMC). Tidak ada sinyal di jam sepi.</div>
+        <span class="feature-badge">LONDON + NY</span>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">💰</span>
+        <div class="feature-title">AUTO MONEY MANAGEMENT</div>
+        <div class="feature-desc">Lot size dihitung otomatis berdasarkan equity dan persentase risk. Trailing stop dinamis menggunakan pip-standarisasi per pair.</div>
+        <span class="feature-badge">RISK % BASED</span>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">📱</span>
+        <div class="feature-title">TELEGRAM NOTIFIKASI</div>
+        <div class="feature-desc">Alert sinyal masuk, eksekusi trade, TP/SL hit, dan laporan harian otomatis jam 7 pagi langsung ke HP kamu via Telegram Bot.</div>
+        <span class="feature-badge">DAILY REPORT</span>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🤖</span>
+        <div class="feature-title">AUTO PILOT MODE</div>
+        <div class="feature-desc">Aktifkan Auto Pilot — EA eksekusi trade otomatis jika score melewati threshold yang kamu tentukan. Set dan tinggalkan.</div>
+        <span class="feature-badge">HANDS-FREE</span>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🔒</span>
+        <div class="feature-title">SISTEM LISENSI AMAN</div>
+        <div class="feature-desc">Key terenkripsi per akun MT5 dengan expire date tersimpan di dalam key. Tidak butuh internet untuk validasi. Kompatibel semua CPU.</div>
+        <span class="feature-badge">OFFLINE LICENSE</span>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">📐</span>
+        <div class="feature-title">RESPONSIVE UI DASHBOARD</div>
+        <div class="feature-desc">Panel kontrol horizontal di atas chart dengan live stats: jumlah pair scan, sinyal aktif, posisi terbuka, dan open P/L real-time.</div>
+        <span class="feature-badge">ALL RESOLUTION</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="cara-pakai" style="background: var(--bg2); border-top: 1px solid var(--border);">
+  <div class="section-inner">
+    <div class="section-tag">CARA PAKAI</div>
+    <h2 class="section-title">Mulai dalam <em>5 Menit</em></h2>
+    <p class="section-desc">Tidak perlu pengalaman coding. Pasang, isi key, pilih mode — selesai.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-content">
+          <div class="step-title">Order & Dapatkan License Key</div>
+          <div class="step-desc">Isi form order di bawah → Captain Fx9 kirim file EA + License Key dalam 1x24 jam via WhatsApp/Telegram.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-content">
+          <div class="step-title">Pasang EA di MetaTrader 5</div>
+          <div class="step-desc">Copy file .ex5 ke folder Experts MT5 → Drag ke chart → Isi License Key di parameter EA → OK.</div>
+          <div class="step-code">Tools → Options → Expert Advisors → Allow WebRequest ✓</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-content">
+          <div class="step-title">Pilih Mode & Mulai Scan</div>
+          <div class="step-desc">Klik tombol SCALPING atau SWING di panel atas → EA langsung scan semua pair di watchlist kamu.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-content">
+          <div class="step-title">Follow Sinyal</div>
+          <div class="step-desc">Kartu sinyal muncul dengan score, pattern, dan Elliott Wave. Klik FOLLOW BUY / FOLLOW SELL — EA eksekusi otomatis dengan lot yang sudah dihitung.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="harga" class="pricing-section">
+  <div class="section-inner">
+    <div class="section-tag" data-id="pricing-tag">HARGA</div>
+    <h2 class="section-title" data-id="pricing-title">Pilih <em>Paket</em> Kamu</h2>
+    <p class="section-desc" data-id="pricing-desc">Semua paket sudah termasuk file EA + License Key + support via WhatsApp.</p>
+
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-name">STARTER</div>
+        <div class="price-amount"><span>$</span>29</div>
+        <div class="price-period" data-id="period-1">/ 1 month</div>
+        <ul class="price-features">
+          <li data-id="f-1-1">License 1 MT5 account</li>
+          <li data-id="f-1-2">All scanner features</li>
+          <li data-id="f-1-3">Telegram notifications</li>
+          <li data-id="f-1-4">WhatsApp support</li>
+          <li class="no" data-id="f-1-5">Auto Pilot</li>
+          <li class="no" data-id="f-1-6">Free updates</li>
+        </ul>
+        <a href="#order" class="btn-secondary" style="display:block;text-align:center;" data-id="btn-starter">CHOOSE STARTER</a>
+      </div>
+
+      <div class="price-card featured">
+        <div class="price-name">PRO</div>
+        <div class="price-amount"><span>$</span>59</div>
+        <div class="price-period" data-id="period-2">/ 3 months</div>
+        <ul class="price-features">
+          <li data-id="f-2-1">License 1 MT5 account</li>
+          <li data-id="f-2-2">All scanner features</li>
+          <li data-id="f-2-3">Telegram notifications</li>
+          <li data-id="f-2-4">WhatsApp support</li>
+          <li data-id="f-2-5">Auto Pilot Mode</li>
+          <li data-id="f-2-6">Free updates</li>
+        </ul>
+        <a href="#order" class="btn-primary" style="display:block;text-align:center;" data-id="btn-pro">CHOOSE PRO</a>
+      </div>
+
+      <div class="price-card">
+        <div class="price-name">LIFETIME</div>
+        <div class="price-amount"><span>$</span>750</div>
+        <div class="price-period" data-id="period-3">/ forever</div>
+        <ul class="price-features">
+          <li data-id="f-3-1">License 1 MT5 account</li>
+          <li data-id="f-3-2">All scanner features</li>
+          <li data-id="f-3-3">Telegram notifications</li>
+          <li data-id="f-3-4">Priority support</li>
+          <li data-id="f-3-5">Auto Pilot Mode</li>
+          <li data-id="f-3-6">Free updates forever</li>
+        </ul>
+        <a href="#order" class="btn-secondary" style="display:block;text-align:center;" data-id="btn-lifetime">CHOOSE LIFETIME</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TELEGRAM CTA -->
+<section class="tg-section">
+  <div class="tg-inner">
+    <span class="tg-icon">📱</span>
+    <h2 class="section-title" style="margin-bottom:16px;" data-id="contact-title">Any Questions?</h2>
+    <p class="section-desc" style="margin: 0 auto 32px; text-align:center;" data-id="contact-desc">
+      Contact Captain Fx9 directly via Telegram or WhatsApp. Fast response, friendly support.
+    </p>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+      <a href="https://t.me/alien_trade14" target="_blank" class="btn-primary">💬 TELEGRAM</a>
+      <a href="https://wa.me/6281298760640" target="_blank" class="btn-secondary">📞 WHATSAPP</a>
+    </div>
+  </div>
+</section>
+
+<!-- ORDER FORM -->
+<section id="order" class="order-section">
+  <div class="section-inner">
+    <div class="section-tag" data-id="order-tag">ORDER</div>
+    <h2 class="section-title" data-id="order-title">Order <em>Now</em></h2>
+    <p class="section-desc" data-id="order-desc">Fill the form below. Captain Fx9 will contact you within 24 hours.</p>
+
+    <div class="order-form">
+      <div class="form-row">
+        <label class="form-label" data-id="label-name">FULL NAME</label>
+        <input type="text" id="inp-name" class="form-input" placeholder="Your name..." />
+      </div>
+      <div class="form-row">
+        <label class="form-label" data-id="label-wa">WHATSAPP / TELEGRAM</label>
+        <input type="text" id="inp-wa" class="form-input" placeholder="+628xxxxxxxxxx" />
+      </div>
+      <div class="form-row">
+        <label class="form-label" data-id="label-acc">MT5 ACCOUNT NUMBER</label>
+        <input type="number" id="inp-acc" class="form-input" placeholder="Your MT5 account number..." />
+      </div>
+      <div class="form-row">
+        <label class="form-label" data-id="label-pkg">SELECT PACKAGE</label>
+        <select id="inp-pkg" class="form-select form-input">
+          <option value="" data-id="pkg-placeholder">-- Select Package --</option>
+          <option value="STARTER — $29 / 1 Month">STARTER — $29 / 1 Month</option>
+          <option value="PRO — $59 / 3 Months">PRO — $59 / 3 Months</option>
+          <option value="LIFETIME — $750 / Forever">LIFETIME — $750 / Forever</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label class="form-label" data-id="label-broker">MT5 BROKER</label>
+        <input type="text" id="inp-broker" class="form-input" placeholder="Your broker name..." />
+      </div>
+      <button class="form-submit" onclick="submitOrder()" data-id="btn-submit">🚀 SEND ORDER</button>
+      <p class="form-note" data-id="form-note">
+        After submitting, Captain Fx9 will contact you via WA/Telegram.<br/>
+        Payment via Bank Transfer / Crypto / PayPal / Wise.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">🛸 ALIEN TERMINAL</div>
+  <div class="footer-copy">© 2026 Captain Fx9. All rights reserved.</div>
+  <div class="footer-links">
+    <a href="#features" data-id="foot-feat">Features</a>
+    <a href="#harga" data-id="foot-price">Pricing</a>
+    <a href="#order" data-id="foot-order">Order</a>
+  </div>
+</footer>
+
+<script>
+// ============================================================
+// LANGUAGE SYSTEM
+// ============================================================
+const LANG = {
+  id: {
+    // Nav
+    'nav-feat':'FITUR','nav-price':'HARGA','nav-how':'CARA PAKAI','nav-order':'ORDER','nav-cta':'BELI SEKARANG',
+    // Hero
+    'hero-badge':'🛸 CAPTAIN FX9 PRESENTS',
+    'hero-desc':'Scanner multi-pair otomatis dengan scoring 100 poin, deteksi Chart Pattern, Elliott Wave, dan filter sesi London–New York. Satu klik FOLLOW — langsung eksekusi.',
+    'hero-btn1':'🚀 BELI SEKARANG','hero-btn2':'LIHAT FITUR',
+    // Stats
+    'stat-1':'POIN SCORING','stat-2':'KOMPONEN SINYAL','stat-3':'PAIR SEKALIGUS','stat-4':'PLATFORM',
+    // Features
+    'feat-tag':'FITUR UNGGULAN',
+    'feat-title':'Teknologi <em>Alien</em><br/>untuk Trader Serius',
+    'feat-desc':'Setiap sinyal difilter oleh 7 komponen independen sebelum ditampilkan. Tidak ada sinyal asal-asalan.',
+    // How
+    'how-tag':'CARA PAKAI','how-title':'Mulai dalam <em>5 Menit</em>',
+    'how-desc':'Tidak perlu pengalaman coding. Pasang, isi key, pilih mode — selesai.',
+    's1-title':'Order & Dapatkan License Key','s1-desc':'Isi form order di bawah → Captain Fx9 kirim file EA + License Key dalam 1x24 jam via WhatsApp/Telegram.',
+    's2-title':'Pasang EA di MetaTrader 5','s2-desc':'Copy file .ex5 ke folder Experts MT5 → Drag ke chart → Isi License Key di parameter EA → OK.',
+    's3-title':'Pilih Mode & Mulai Scan','s3-desc':'Klik tombol SCALPING atau SWING di panel atas → EA langsung scan semua pair di watchlist kamu.',
+    's4-title':'Follow Sinyal','s4-desc':'Kartu sinyal muncul dengan score, pattern, dan Elliott Wave. Klik FOLLOW BUY / FOLLOW SELL — EA eksekusi otomatis.',
+    // Pricing
+    'pricing-tag':'HARGA','pricing-title':'Pilih <em>Paket</em> Kamu',
+    'pricing-desc':'Semua paket sudah termasuk file EA + License Key + support via WhatsApp.',
+    'period-1':'/ 1 bulan','period-2':'/ 3 bulan','period-3':'/ selamanya',
+    'f-1-1':'License 1 akun MT5','f-1-2':'Semua fitur scanner','f-1-3':'Notifikasi Telegram','f-1-4':'Support via WA','f-1-5':'Auto Pilot','f-1-6':'Update gratis',
+    'f-2-1':'License 1 akun MT5','f-2-2':'Semua fitur scanner','f-2-3':'Notifikasi Telegram','f-2-4':'Support via WA','f-2-5':'Auto Pilot Mode','f-2-6':'Update gratis',
+    'f-3-1':'License 1 akun MT5','f-3-2':'Semua fitur scanner','f-3-3':'Notifikasi Telegram','f-3-4':'Priority support','f-3-5':'Auto Pilot Mode','f-3-6':'Update gratis selamanya',
+    'btn-starter':'PILIH STARTER','btn-pro':'PILIH PRO','btn-lifetime':'PILIH LIFETIME',
+    // Contact
+    'contact-title':'Ada Pertanyaan?',
+    'contact-desc':'Hubungi Captain Fx9 langsung via Telegram atau WhatsApp. Respon cepat, support ramah.',
+    // Order
+    'order-tag':'ORDER','order-title':'Order <em>Sekarang</em>',
+    'order-desc':'Isi form di bawah. Captain Fx9 akan menghubungi kamu dalam 1x24 jam.',
+    'label-name':'NAMA LENGKAP','label-wa':'WHATSAPP / TELEGRAM','label-acc':'NOMOR AKUN MT5',
+    'label-pkg':'PILIH PAKET','label-broker':'BROKER MT5',
+    'pkg-placeholder':'-- Pilih Paket --','btn-submit':'🚀 KIRIM ORDER',
+    'form-note':'Setelah submit, Captain Fx9 akan menghubungi kamu via WA/Telegram.<br/>Pembayaran via Transfer Bank / QRIS / Dana / GoPay / Crypto / Wise.',
+    // Footer
+    'foot-feat':'Fitur','foot-price':'Harga','foot-order':'Order',
+  },
+  en: {
+    'nav-feat':'FEATURES','nav-price':'PRICING','nav-how':'HOW IT WORKS','nav-order':'ORDER','nav-cta':'BUY NOW',
+    'hero-badge':'🛸 CAPTAIN FX9 PRESENTS',
+    'hero-desc':'Automated multi-pair scanner with 100-point scoring, Chart Pattern detection, Elliott Wave analysis, and London–New York session filter. One click FOLLOW — instant execution.',
+    'hero-btn1':'🚀 BUY NOW','hero-btn2':'SEE FEATURES',
+    'stat-1':'SCORING POINTS','stat-2':'SIGNAL COMPONENTS','stat-3':'PAIRS AT ONCE','stat-4':'PLATFORM',
+    'feat-tag':'KEY FEATURES','feat-title':'<em>Alien</em> Technology<br/>for Serious Traders',
+    'feat-desc':'Every signal is filtered by 7 independent components before being displayed. No random signals.',
+    'how-tag':'HOW IT WORKS','how-title':'Start in <em>5 Minutes</em>',
+    'how-desc':'No coding experience needed. Install, enter key, select mode — done.',
+    's1-title':'Order & Get License Key','s1-desc':'Fill the order form → Captain Fx9 sends the EA file + License Key within 24 hours via WhatsApp/Telegram.',
+    's2-title':'Install EA in MetaTrader 5','s2-desc':'Copy .ex5 file to MT5 Experts folder → Drag to chart → Enter License Key in EA parameters → OK.',
+    's3-title':'Select Mode & Start Scanning','s3-desc':'Click SCALPING or SWING button on the top panel → EA instantly scans all pairs in your watchlist.',
+    's4-title':'Follow Signals','s4-desc':'Signal cards appear with score, pattern, and Elliott Wave. Click FOLLOW BUY / FOLLOW SELL — EA executes automatically.',
+    'pricing-tag':'PRICING','pricing-title':'Choose Your <em>Plan</em>',
+    'pricing-desc':'All plans include EA file + License Key + WhatsApp support.',
+    'period-1':'/ 1 month','period-2':'/ 3 months','period-3':'/ forever',
+    'f-1-1':'License 1 MT5 account','f-1-2':'All scanner features','f-1-3':'Telegram notifications','f-1-4':'WhatsApp support','f-1-5':'Auto Pilot','f-1-6':'Free updates',
+    'f-2-1':'License 1 MT5 account','f-2-2':'All scanner features','f-2-3':'Telegram notifications','f-2-4':'WhatsApp support','f-2-5':'Auto Pilot Mode','f-2-6':'Free updates',
+    'f-3-1':'License 1 MT5 account','f-3-2':'All scanner features','f-3-3':'Telegram notifications','f-3-4':'Priority support','f-3-5':'Auto Pilot Mode','f-3-6':'Free updates forever',
+    'btn-starter':'CHOOSE STARTER','btn-pro':'CHOOSE PRO','btn-lifetime':'CHOOSE LIFETIME',
+    'contact-title':'Any Questions?',
+    'contact-desc':'Contact Captain Fx9 directly via Telegram or WhatsApp. Fast response, friendly support.',
+    'order-tag':'ORDER','order-title':'Order <em>Now</em>',
+    'order-desc':'Fill the form below. Captain Fx9 will contact you within 24 hours.',
+    'label-name':'FULL NAME','label-wa':'WHATSAPP / TELEGRAM','label-acc':'MT5 ACCOUNT NUMBER',
+    'label-pkg':'SELECT PACKAGE','label-broker':'MT5 BROKER',
+    'pkg-placeholder':'-- Select Package --','btn-submit':'🚀 SEND ORDER',
+    'form-note':'After submitting, Captain Fx9 will contact you via WA/Telegram.<br/>Payment via Bank Transfer / Crypto / PayPal / Wise.',
+    'foot-feat':'Features','foot-price':'Pricing','foot-order':'Order',
+  }
+};
+
+let currentLang = 'en';
+
+function setLang(lang) {
+  currentLang = lang;
+  const t = LANG[lang];
+  document.querySelectorAll('[data-id]').forEach(el => {
+    const key = el.getAttribute('data-id');
+    if(t[key] !== undefined) el.innerHTML = t[key];
+  });
+  // Update active button
+  document.getElementById('lang-id').style.color  = lang==='id' ? 'var(--green)' : 'var(--muted)';
+  document.getElementById('lang-en').style.color  = lang==='en' ? 'var(--green)' : 'var(--muted)';
+  document.getElementById('lang-id').style.borderColor = lang==='id' ? 'var(--green)' : 'transparent';
+  document.getElementById('lang-en').style.borderColor = lang==='en' ? 'var(--green)' : 'transparent';
+}
+
+function submitOrder() {
+  const nama   = document.getElementById('inp-name').value;
+  const wa     = document.getElementById('inp-wa').value;
+  const akun   = document.getElementById('inp-acc').value;
+  const paket  = document.getElementById('inp-pkg').value;
+  const broker = document.getElementById('inp-broker').value;
+
+  const errMsg = currentLang==='id'
+    ? 'Mohon lengkapi semua field terlebih dahulu!'
+    : 'Please fill in all fields before submitting!';
+
+  if(!nama||!wa||!akun||!paket||!broker) { alert(errMsg); return; }
+
+  const msg = encodeURIComponent(
+    `🛸 ORDER ALIEN TERMINAL V14\n` +
+    `━━━━━━━━━━━━━━━━━━\n` +
+    `Name   : ${nama}\n` +
+    `WA/TG  : ${wa}\n` +
+    `Account: ${akun}\n` +
+    `Package: ${paket}\n` +
+    `Broker : ${broker}\n` +
+    `━━━━━━━━━━━━━━━━━━\n` +
+    `Please confirm & send payment info. Thank you!`
+  );
+
+  window.open(`https://wa.me/6281298760640?text=${msg}`, '_blank');
+}
+
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.feature-card, .price-card, .step').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(24px)';
+  el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
